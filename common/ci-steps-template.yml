@@ -33,6 +33,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
+    helm chart save $(projectName):$(helmChartVersion)
     helm chart save . $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
   failOnStderr: true
   name: helmSave
