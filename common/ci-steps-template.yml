@@ -41,7 +41,7 @@ steps:
   displayName: 'helm registry login'
 - bash: |
     cd charts/$(projectName)
-    curl --data-binary "@$(projectName)-$(helmChartVersion).tgz" http://20.101.8.32:8080/api/charts
+    curl --data-binary "@$(projectName)-$(helmChartVersion).tgz" http://20.76.246.175:8080/api/charts
   failOnStderr: true
   name: helmPush
   condition: succeeded()
