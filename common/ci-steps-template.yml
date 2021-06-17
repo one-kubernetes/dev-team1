@@ -35,6 +35,7 @@ steps:
     export HELM_EXPERIMENTAL_OCI=1
     helm chart save . $(projectName):$(helmChartVersion)
     helm chart save . $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
+    helm chart list
   failOnStderr: true
   name: helmSave
   condition: succeeded()
