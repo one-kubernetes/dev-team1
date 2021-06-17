@@ -16,7 +16,7 @@ steps:
 - bash: |
     docker push $(registryServerName)/$(imageName):$(imageTag)
   failOnStderr: true
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: 'docker push'
 - task: HelmInstaller@1
   displayName: 'install helm'
