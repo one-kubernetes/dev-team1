@@ -1,7 +1,6 @@
 steps:
 - bash: |
     cd $(projectName)
-    yq -i
     docker build \
         -t $(registryServerName)/$(imageName):$(imageTag) \
         .
@@ -23,6 +22,11 @@ steps:
   displayName: 'install helm'
   inputs:
     helmVersionToInstall: $(helmVersion)
+- bash: |
+    wget https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64 -O /usr/bin/yq && chmod +x /usr/bin/yq
+  failOnStderr: true
+  condition: succeeded()
+  displayName: 'install yq'
 - bash: |
     cd $(projectName)
     helm package \
