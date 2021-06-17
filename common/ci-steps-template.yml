@@ -43,7 +43,7 @@ steps:
   condition: succeeded()
   displayName: 'helm registry login'
 - bash: |
-    cd ../charts/$(chartName)
+    cd charts/$(chartName)
     export HELM_EXPERIMENTAL_OCI=1
     helm chart push $(registryName).azurecr.io/helm/$(chartName):$(helmChartVersion)
   failOnStderr: true
