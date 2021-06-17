@@ -5,7 +5,8 @@ trigger:
     - '*'
   paths:
     include:
-    - '*'
+    - back/
+    - common/ci-steps-template.yml
 
 pr: none
 
