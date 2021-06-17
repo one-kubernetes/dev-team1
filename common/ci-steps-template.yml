@@ -1,0 +1,63 @@
+steps:
+- bash: |
+    cd $(projectName)
+    docker build \
+        -t $(registryServerName)/$(imageName):$(imageTag) \
+        .
+  failOnStderr: true
+  displayName: 'docker build'
+- bash: |
+    echo '$(registryPassword)' | docker login \
+        $(registryServerName) \
+        -u $(registryLogin) \
+        --password-stdin
+  condition: succeeded()
+  displayName: 'docker login'
+- bash: |
+    docker push $(registryServerName)/$(imageName):$(imageTag)
+  failOnStderr: true
+  condition: succeeded()
+  displayName: 'docker push'
+- task: HelmInstaller@1
+  displayName: 'install helm'
+  inputs:
+    helmVersionToInstall: $(helmVersion)
+- bash: |
+    cd $(projectName)
+    helm package \
+        --version $(helmChartVersion) \
+        --app-version $(imageTag) \
+        charts/$(projectName)
+  failOnStderr: true
+  displayName: 'helm package'
+- bash: |
+    cd $(projectName)/charts/parrot
+    export HELM_EXPERIMENTAL_OCI=1
+    sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
+    helm chart save . $(projectName)
+    helm chart save . $(registryName).azurecr.io/helm/$(projectName)
+    helm chart list
+  failOnStderr: true
+  name: helmSave
+  condition: succeeded()
+  displayName: 'helm chart local save'
+- bash: |
+    export HELM_EXPERIMENTAL_OCI=1
+    echo $(registryPassword) | helm registry login $(registryName).azurecr.io \
+        --username $(registryLogin) \
+        --password-stdin
+  failOnStderr: true
+  name: helmLogin
+  condition: succeeded()
+  displayName: 'helm registry login'
+- bash: |
+    cd $(projectName)/charts/parrot
+    export HELM_EXPERIMENTAL_OCI=1
+    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
+  failOnStderr: true
+  name: helmPush
+  condition: succeeded()
+  displayName: 'helm push'
+- publish: $(build.artifactStagingDirectory)
+  artifact: build-artifact
+  # condition: succeeded()
