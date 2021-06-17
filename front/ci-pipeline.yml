@@ -6,8 +6,8 @@ trigger:
   paths:
     include:
     - front/
-    - charts/
-    - common/ci-steps-template.yml
+    - charts/front/
+    - common/
 
 pr: none
 
