@@ -52,11 +52,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart push $(registryName).azurecr.io/helm/$(projectName):v0.3.0
-    echo $(helmChartVersion)
-    echo $version
-    echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') 
-    echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') > $(build.artifactStagingDirectory)/variables.json
+    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
   failOnStderr: true
   name: helmPush
   condition: succeeded()
