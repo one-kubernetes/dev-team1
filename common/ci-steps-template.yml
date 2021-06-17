@@ -23,18 +23,15 @@ steps:
   inputs:
     helmVersionToInstall: $(helmVersion)
 - bash: |
-    cd charts/$(projectName)
-    export HELM_EXPERIMENTAL_OCI=1
     sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
     sed -i 's/\$\$APPVERSION\$\$/$(imageTag)/g' Chart.yaml
     sed -i 's/\$\$IMAGENAME\$\$/$(registryServerName)\/$(imageName)/g' values.yaml
-    helm chart save . $(projectName)
-    helm chart save . $(registryName).azurecr.io/helm/$(projectName)
-    helm chart list
+    helm package \
+        --version $(helmChartVersion) \
+        --app-version $(imageTag) \
+        charts/$(projectName)
   failOnStderr: true
-  name: helmSave
-  condition: succeeded()
-  displayName: 'helm chart local save'
+  displayName: 'helm package'
 - bash: |
     export HELM_EXPERIMENTAL_OCI=1
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io \
@@ -45,9 +42,7 @@ steps:
   condition: succeeded()
   displayName: 'helm registry login'
 - bash: |
-    cd charts/$(projectName)
-    export HELM_EXPERIMENTAL_OCI=1
-    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
+    curl --data-binary "@$(projectName)-$(helmChartVersion).tgz" http://20.101.8.32:8080/api/charts
   failOnStderr: true
   name: helmPush
   condition: succeeded()
