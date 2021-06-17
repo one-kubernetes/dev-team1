@@ -23,11 +23,6 @@ steps:
   inputs:
     helmVersionToInstall: $(helmVersion)
 - bash: |
-    sudo wget https://github.com/mikefarah/yq/releases/download/v4.2.0/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq
-  failOnStderr: true
-  condition: succeeded()
-  displayName: 'install yq'
-- bash: |
     cd $(projectName)
     helm package \
         --version $(helmChartVersion) \
@@ -38,6 +33,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
+    sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
     helm chart save . $(projectName)
     helm chart save . $(registryName).azurecr.io/helm/$(projectName)
     helm chart list
