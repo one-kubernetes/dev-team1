@@ -31,7 +31,7 @@ steps:
   failOnStderr: true
   displayName: 'helm package'
 - bash: |
-    cd $(projectName)
+    cd $(projectName)/parrot/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
     helm chart save . $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io \
