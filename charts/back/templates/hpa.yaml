@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "fluxapp.fullname" . }}
+  name: {{ include "back.fullname" . }}
   labels:
-    {{- include "fluxapp.labels" . | nindent 4 }}
+    {{- include "back.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "fluxapp.fullname" . }}
+    name: {{ include "back.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
