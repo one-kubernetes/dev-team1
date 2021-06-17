@@ -33,7 +33,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart save . $(registryName).azurecr.io/helm/$(projectName)
+    helm chart save . $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
   failOnStderr: true
   name: helmSave
   condition: succeeded()
@@ -50,7 +50,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart push $(registryName).azurecr.io/helm/$(projectName)
+    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
     echo $(helmChartVersion)
     echo $version
     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') 
@@ -61,4 +61,4 @@ steps:
   displayName: 'helm push'
 - publish: $(build.artifactStagingDirectory)
   artifact: build-artifact
-  condition: succeeded()
+  # condition: succeeded()
