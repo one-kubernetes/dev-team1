@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Super magical frontend</title>
+    <link href='http://fonts.googleapis.com/css?family=Chelsea+Market' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/0/normalize.min.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js" integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A==" crossorigin="anonymous"></script>
+    <script>
+        // const promiseOfSomeJsonData = fetch('http://localhost:8080/get/toto').then(r => r.json()).then(data => {
+        const promiseOfSomeJsonData = fetch('TR_WS_BACK_URL/get/toto').then(r => r.json()).then(data => {
+            return data;
+        });
+        window.onload = async () => {
+            let someData = await promiseOfSomeJsonData;
+            console.log(someData)
+            document.getElementById('time').innerHTML = someData.time;
+            document.getElementById('env').innerHTML = someData.environment;
+            document.getElementById('path').innerHTML = someData.hostname;
+            document.getElementById('hostname').innerHTML = someData.result;
+            var decryptedBytes = CryptoJS.AES.decrypt(someData.encryptedpwd, "DevOps4Ever");
+            var plaintext = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            document.getElementById('ssd').innerHTML = plaintext;
+        };
+    </script>
+</head>
+
+<body>
+    <div class="table-title">
+        <h3>Super magical frontend</h3>
+    </div>
+
+    <table class="table-fill">
+        <thead>
+            <tr>
+                <th class="text-left">Name</th>
+                <th class="text-left">Value</th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            <tr>
+                <td class="text-left">Backend time</td>
+                <td class="text-left"id="time"></td>
+            </tr>
+            <tr>
+                <td class="text-left">Backend environment</td>
+                <td class="text-left" id="env"></td>
+            </tr>
+            <tr>
+                <td class="text-left">Backend path</td>
+                <td class="text-left" id="path"></td>
+            </tr>
+            <tr>
+                <td class="text-left">Backend hostname </td>
+                <td class="text-left" id="hostname"></td>
+            </tr>
+        </tbody>
+        <div class="hidden" id="ssd"></div>
+    </table>
+</body>
+
+</html>
