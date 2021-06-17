@@ -27,10 +27,7 @@ steps:
     sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
     sed -i 's/\$\$APPVERSION\$\$/$(imageTag)/g' Chart.yaml
     sed -i 's/\$\$IMAGENAME\$\$/$(registryServerName)\/$(imageName)/g' values.yaml
-    helm package \
-        --version $(helmChartVersion) \
-        --app-version $(imageTag) \
-        charts/$(projectName)
+    helm package --version $(helmChartVersion) --app-version $(imageTag) .
   failOnStderr: true
   displayName: 'helm package'
 - bash: |
