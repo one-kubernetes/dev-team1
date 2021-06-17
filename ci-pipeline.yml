@@ -1,0 +1,21 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - '*'
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- template: common/ci-vars-template.yml
+  parameters:
+    projectName: MyUberApplication
+
+steps:
+- template: common/ci-steps-template.yml
