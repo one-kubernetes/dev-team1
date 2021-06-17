@@ -7,4 +7,4 @@ variables:
   projectName: ${{ parameters.projectName }}
   imageName: ${{ parameters.projectName }}
   imageTag: $(build.buildId)
-  helmChartVersion: v1.0.$(build.buildId)
+  helmChartVersion: v1.0.0
