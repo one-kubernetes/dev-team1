@@ -52,7 +52,7 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
+    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion):v0.3.0
     echo $(helmChartVersion)
     echo $version
     echo $(jq -n --arg version "$(helmChartVersion)" '{helmChartVersion: $version}') 
