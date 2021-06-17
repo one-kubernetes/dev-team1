@@ -33,12 +33,12 @@ steps:
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart save $(projectName):$(helmChartVersion)
+    helm chart save . $(projectName):$(helmChartVersion)
     helm chart save . $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
   failOnStderr: true
   name: helmSave
   condition: succeeded()
-  displayName: 'Helm Chart local save'
+  displayName: 'helm chart local save'
 - bash: |
     export HELM_EXPERIMENTAL_OCI=1
     echo $(registryPassword) | helm registry login $(registryName).azurecr.io \
@@ -47,7 +47,7 @@ steps:
   failOnStderr: true
   name: helmLogin
   condition: succeeded()
-  displayName: 'Helm Registry login'
+  displayName: 'helm registry login'
 - bash: |
     cd $(projectName)/charts/parrot
     export HELM_EXPERIMENTAL_OCI=1
