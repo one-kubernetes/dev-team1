@@ -23,7 +23,7 @@ steps:
   inputs:
     helmVersionToInstall: $(helmVersion)
 - bash: |
-    cd ../charts/$(chartName)
+    cd charts/$(chartName)
     export HELM_EXPERIMENTAL_OCI=1
     sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
     helm chart save . $(chartName)
