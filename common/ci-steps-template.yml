@@ -23,19 +23,11 @@ steps:
   inputs:
     helmVersionToInstall: $(helmVersion)
 - bash: |
-    cd $(projectName)
-    helm package \
-        --version $(helmChartVersion) \
-        --app-version $(imageTag) \
-        charts/$(projectName)
-  failOnStderr: true
-  displayName: 'helm package'
-- bash: |
-    cd $(projectName)/charts/parrot
+    cd ../charts/$(chartName)
     export HELM_EXPERIMENTAL_OCI=1
     sed -i 's/\$\$HELMVERSION\$\$/$(helmChartVersion)/g' Chart.yaml
-    helm chart save . $(projectName)
-    helm chart save . $(registryName).azurecr.io/helm/$(projectName)
+    helm chart save . $(chartName)
+    helm chart save . $(registryName).azurecr.io/helm/$(chartName)
     helm chart list
   failOnStderr: true
   name: helmSave
@@ -51,9 +43,9 @@ steps:
   condition: succeeded()
   displayName: 'helm registry login'
 - bash: |
-    cd $(projectName)/charts/parrot
+    cd ../charts/$(chartName)
     export HELM_EXPERIMENTAL_OCI=1
-    helm chart push $(registryName).azurecr.io/helm/$(projectName):$(helmChartVersion)
+    helm chart push $(registryName).azurecr.io/helm/$(chartName):$(helmChartVersion)
   failOnStderr: true
   name: helmPush
   condition: succeeded()
